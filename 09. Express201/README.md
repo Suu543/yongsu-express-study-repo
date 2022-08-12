@@ -121,3 +121,313 @@ app.listen(3000, () => {
 });
 ```
 
+## Awesome Express Middleware (Part3)
+Built-in Middleware
+- `express.static()`: HTML, CSS, 이미지 등과 같은 정적 자원(Static Assets)를 제공하는 미들웨어입니다.
+- `express.json()`: JSON 형식의 요청을 처리하는 미들웨어입니다.
+- `express.urlencoded()`: URL 인코딩 형식의 요청을 처리하는 미들웨어입니다.
+
+Third-party Middleware
+- helmet: `HTTP Headers`에 보안적인 정보를 추가하는 미들웨어입니다.
+- cookie-parser: `Cookie`를 처리하는 미들웨어입니다.
+- cors: `Cross-Origin Resource Sharing`을 지원하는 미들웨어입니다.
+- passport: 구글, 페이스북, 트위터 등 Oauth 로그인을 지원하는 미들웨어입니다.
+- morgan: `HTTP Request`의 상태 코드 및 요청 시간을 출력하는 미들웨어입니다. 
+- https://blog.bitsrc.io/5-express-middleware-libraries-every-developer-should-know-94e2728f7503
+
+`ajax.html` 코드를 보면,
+```html
+// public/ajax.html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      const init = {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: "John",
+          age: 30,
+        }),
+      };
+
+      fetch("http://localhost:3000/ajax", init)
+        .then((res) => res.json())
+        .then((data) => console.log(data));
+    </script>
+  </body>
+</html>
+```
+
+`express.json()` 미들웨어를 추가하지 않은 경우, `application/json` 형태로 요청이 들어왔음에도, `req.body`에 어떤 값도 붙지 않은 것을 확인할 수 있습니다. 
+- `express.json()` 미들웨어는 `application/json` 형태로 들어온 데이터를 파싱해 `req.body`에 붙여주는 기능을 합니다.
+```javascript
+// app.js
+const express = require("express");
+const helmet = require("helmet");
+const app = express();
+
+app.use(helmet());
+
+app.use(express.static("public"));
+// app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: false,
+  })
+);
+
+app.post("/ajax", (req, res) => {
+  console.log("req.headers", req.headers);
+  console.log("------------------------------");
+  console.log("req.body", req.body); // { }
+
+  res.send({
+    key: "value",
+  });
+});
+
+app.listen(3000, () => {
+  console.log("Listening on port 3000");
+});
+```
+
+```javascript
+const express = require("express");
+const helmet = require("helmet");
+const app = express();
+
+app.use(helmet());
+
+app.use(express.static("public"));
+app.use(express.json());
+app.use(
+  express.urlencoded({
+    extended: false,
+  })
+);
+
+app.post("/ajax", (req, res) => {
+  console.log("------------------------------");
+  console.log("req.headers", req.headers); 
+  console.log("req.body", req.body); // { name: "John", age: 30}
+ 
+  res.send({
+    key: "value",
+  });
+});
+
+app.listen(3000, () => {
+  console.log("Listening on port 3000");
+});
+```
+
+## Responding with JSON (part4)
+`POSTMAN`을 사용해서 `application/json` 형태로 응답하기.
+- `res.send()` 함수는 기본값으로 `mime-type: text/html` 가집니다.
+- `res.json()` 함수는 `object`를 `JSON.stringify()` 함수를 사용해 `JSON String`으로 변환해 응답하는 역할을 합니다. 
+
+```javascript
+const express = require("express");
+const helmet = require("helmet");
+const app = express();
+
+app.use(helmet());
+
+app.use(express.static("public"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+
+app.post("/arr", (req, res) => {
+  const data = ["Test", 1, 2, 3, 4];
+
+  console.log(req.body);
+  res.json(data);
+});
+
+app.post("/obj", (req, res) => {
+  const data = {
+    key1: "value1",
+    key2: "value2",
+  };
+
+  console.log(req.body);
+  res.json(data);
+});
+
+app.listen(3000, () => {
+  console.log("Listening on port 3000");
+});
+```
+
+- `urlencoded`: `&`로 분리되고, `=` 기호로 값과 키를 연결하는 `key-value` 튜플 형태로 인코딩되는 값입니다.
+- `express.urlencoded()`: 해당 함수는 `urlencoded` 형태로 인코딩된 데이터를 파싱해 `req.body`에 붙여주는 기능을 합니다.
+  - 해당 메소드에 일치하는 `요청(req)`만을 처리하는 `middleware`를 반환합니다.
+- POST 요청은 보통 HTML 양식을 통해 서버에 전송하며, 서버에 변경사항을 만듭니다. 이 경우의 콘텐츠 유형(Content-Type)은 <form> 요소의 enctype 특성이나 <input>, <button> 요소의 formenctype 특성 안에 적당한 문자열을 넣어 결정합니다.
+- application/x-www-form-urlencoded: &으로 분리되고 "=" 기호로 값과 키를 연결하는 key-value tuple로 인코딩되는 값입니다. 영어 알파벳이 아닌 문자들은 percent encoded 으로 인코딩됩니다., 이 content type은 바이너리 데이터에 사용하기에는 적절치 않습니다. (
+- 이미지, 파일, 비디오 등의 이진 데이터(바이너리 디에터) 전송은 multipart/form-data 를 사용해야 합니다.
+- https://thankee.tistory.com/85
+
+```html
+// index.html
+
+<form method="POST" action="/" >
+  <input type="text" name="user[name]" />
+  <input type="text" name="user[email]" />
+  <input type="submit" value="submit" />
+</form>
+```
+
+```javascript
+const express = require("express");
+const app = express();
+
+app.use(express.urlencoded({ extended: false }));
+
+app.post("/", (req, res) => {
+  const { name, email } = req.body.user;
+
+  console.log("name: ", name);
+  console.log("email: ", email);
+});
+```
+
+`express.text([options])`
+- 이 메소드는 `body(payload)`를 문자열로 파싱해 리턴합니다.
+
+## Summary
+```javascript
+// express.js를 사용하기 위해 모듈을 불러옵니다.
+const express = require("express");
+// 변수 app에 Express 인스턴스를 생성합니다. 
+const app = express();
+
+// GET 방식으로 "/" 요청을 처리합니다.
+app.get("/", (req, res) => {
+  res.send("homepage");
+});
+
+// 3000번 포트에서 서버를 실행합니다.
+app.listen(3000, () => {
+  console.log("Listening on port 3000");
+});
+```
+
+<img src="https://camo.githubusercontent.com/e1e8a60257a9529e74f3db358d160c5eeea0b787b89feeff0ff49efc048ca0d7/68747470733a2f2f6d656469612e766c70742e75732f696d616765732f6261656b313030382f706f73742f33336131346265392d386231662d346561352d623636612d3338316365366439383061342f254531253834253839254531253835254233254531253834253846254531253835254233254531253834253835254531253835254235254531253836254142254531253834253839254531253835254133254531253836254241253230323032312d31312d3033253230254531253834253842254531253835254139254531253834253932254531253835254145253230342e33382e33312e706e67" />
+
+자동차 공장의 컨베이어 벨트는 일렬의 순서를 따라 진행됩니다. 추가, 수정, 삭제 등의 공정을 거쳐 자동차를 생산합니다. 물론 이 경우에 불량인 자동차도 선별합니다. `middleware`는 앱에서 컨베이어 벨트의 추가, 수정, 삭제 등의 공정을 담당합니다. `next()` 함수는 다음 공정으로 넘어가게 해주는 역할을 합니다. 
+
+`middleware` 사용 예시
+1. 모든 요청에 대해 로그를 출력하는 경우.
+
+```javascript
+const express = require("express");
+const app = express();
+
+function myLogger (req, res, next) {
+  console.log("LOGGED");
+  next();
+}
+
+app.use(myLogger);
+
+app.get("/", (req, res) => {
+  res.send("Hello World");
+});
+
+app.get("/json", (req, res) => {
+  res.json({
+    message: "Hello World",
+  });
+});
+```
+
+2. `POST` HTTP 요청의 `body(payload)`를 구조화하고 싶은 경우.
+- `payload`: 데이터 전송부분 중에서 사용자에게 전송되는 데이터를 의미합니다.
+
+```javascript
+const express = require("express");
+const bodyParser = require("body-parser");
+const jsonParser = bodyParser.json();
+const app = express();
+
+// app.use(express.json()); // jsonParser와 똑같은 기능을 합니다.
+
+app.post("/api/users", jsonParser, (req, res) => {
+  // req.body에는 객체(object) 형태로 paylaod가 담겨 있습니다.
+});
+```
+
+3. 모든 요청에 `cors` 헤더를 추가하고 싶은 경우.
+
+```javascript
+const express = require("express");
+const cors = require("cors");
+const app = express();
+
+// 모든 요청에 대해 CORS 허용합니다.
+app.use(cors()); 
+
+// 특정 요청에 대해 CORS 허용하는 경우
+const cors = require("cors");
+
+app.get("/product/:id", cors(), (req, res, next) => {
+  res.json({ msg: "This is CORS-Enabled for a Single Route" });
+});
+```
+
+4. 요청 헤더에 사용자 인증 정보가 담겨있는지 확인하고 싶은 경우, `HTTP Request`에 인증 토큰이 있는지를 판단하고, 인증 토큰이 있다면 사용자 인증 정보를 추출하고 싶은 경우. 반대로 없다면 오류를 출력하고 싶은 경우.
+
+```javascript
+const express = require("express");
+const app = express();
+
+app.use((req, res, next) => {
+  // token 여부 확인
+  if (req.headers.token) {
+    req.isLoggedIn = true;
+    next();
+  } else {
+    // 토큰 미보유시 error 메시지 출력 및 오류 코드 전송
+    res.status(401).send("Unauthorized User...");
+  }
+});
+```
+
+5. express 서버에서 `POST` 방식의 데이터 처리.
+```javascript
+// app.js
+const init = {
+    method: "POST",
+    headers: {
+        "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+        user: {
+            name: "baek",
+            email: "baek@example.com",
+        },
+    }),
+};
+
+fetch("/", init);
+
+// express.js
+const express = require("express");
+const app = express();
+
+app.use(express.json());
+
+
+app.post("/", (req, res) => {
+  const { name, email } = req.body.user;
+})
+```
