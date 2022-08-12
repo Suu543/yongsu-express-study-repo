@@ -301,7 +301,10 @@ app.post("/", (req, res) => {
 ```
 
 `express.text([options])`
-- 이 메소드는 `body(payload)`를 문자열로 파싱해 리턴합니다.
+- 이 메소드는 `body(payload)`를 `String(문자열)` 형태로 파싱해 리턴합니다.
+
+`express.raw([options])`
+- 이 메소드는 `body(payload)`를 `Buffer` 형태로 파싱해 리턴합니다.
 
 ## Summary
 ```javascript
