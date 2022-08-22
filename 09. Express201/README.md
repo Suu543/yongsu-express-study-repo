@@ -434,3 +434,57 @@ app.post("/", (req, res) => {
   const { name, email } = req.body.user;
 })
 ```
+
+## Summary
+
+#### Networking - HTTP and TCP/IP
+- Stateless Protocol
+- Connectionless Protocol
+- Flexible Protocol
+- HTTP Message
+  - start line
+    - req: GET /blog http/1.1
+    - res: http/1.1 200 OK
+  - headers
+    - { key: values }
+      - content-type: text/html
+      - content-type: application/json
+      - cache-control: public, max-age=0
+      - Date: Fri, 25, Sep 2019 09:00:00 GMT
+  - blank Line
+  - body
+    - Contents: HTML, 4K Video, JSON, etc.
+
+#### Node.js Server
+- write Headers
+- write Body
+  - fs module
+- close connection
+- server.listen(port)
+- request (req), response (res) (callback)
+
+
+#### Express Server
+- app() => express() => createApplication()
+- server.listen() ==> app.listen()
+- router
+  - app.all(), app.get(), app.post(), app.put(), app.delete(), app.patch()
+- express.static() middleware - static files
+
+#### Express 201
+- Middleware => `req`, `res`, `next`에 접근할 수 있는 함수
+- next() => 다음 미들웨어로 넘어가기
+- express.json() => bodyParser.json()
+- express.urlencoded() => bodyParser.urlencoded()
+- helmet() => 보안 관련 미들웨어
+
+- Request (req)
+  - req.ip(): 요청자의 IP 주소
+  - req.path(): 요청자의 현재 경로
+  - req.body(): 요청자의 요청 본문
+
+- Response (res)
+  - res.send() => res.end => text/html 형식으로 전달
+  - res.sendFile() => 파일 전달
+  - res.locals() => 전역 변수 저장소 (res에서 접근 가능)
+  - res.json() => application/json(JSON) 형식으로 전달 
