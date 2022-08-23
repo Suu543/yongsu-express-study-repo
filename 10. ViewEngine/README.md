@@ -431,3 +431,8 @@ app.listen(3000, () => {
   cursor: pointer;
 }
 ```
+
+References
+- https://ejs.co/
+- https://gmlwjd9405.github.io/2018/12/21/template-engine.html
+
