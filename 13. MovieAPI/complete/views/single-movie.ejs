@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Single Movie</title>
+    <%- include("head") %>
+  </head>
+  <body>
+    <%- include("navbar") %>
+    <div class="single-movie-container">
+      <div class="single-movie-row">
+        <h1 class="single-movie-title"><%= parsedData.title %></h1>
+        <h3 class="single-movie-tagline"><%= parsedData.tagline %></h3>
+        <img src="<%= imageBaseUrl + parsedData.poster_path %>" />
+
+        <p class="single-movie-overview">
+          Movie Synopsis: <br />
+          <span> <%= parsedData.overview %> </span>
+        </p>
+
+        <div id="detail" class="single-movie-detail">
+          <button id="single-movie-open">More Detail</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="single-movie-modal fade">
+      <div class="single-movie-content">
+        <div class="single-movie-modal__header">
+          <h3>Movie Information</h3>
+        </div>
+        <div class="single-movie-modal__body">
+          <a
+            href="https://www.imdb.com/title/<%= parsedData.imdb_id %>"
+            target="_blank"
+            >IMDB Link</a
+          >
+          <p><%= parsedData.budget %></p>
+          <p><%= parsedData.revenue %></p>
+          <p><%= parsedData.release_date %></p>
+          <ul>
+            <% parsedData.production_companies.forEach((company) => { %>
+            <li><%= company.name %></li>
+            <% }) %>
+          </ul>
+        </div>
+        <div class="single-movie-btn">
+          <button id="single-movie-close">Close</button>
+        </div>
+      </div>
+    </div>
+    <script src="/javascript/modal.js"></script>
+  </body>
+</html>
