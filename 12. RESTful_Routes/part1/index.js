@@ -1,6 +1,11 @@
 const express = require("express");
 const app = express();
 
+app.use((req, res, next) => {
+  console.log(req);
+
+  next();
+});
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/tacos", (req, res) => {
@@ -8,8 +13,10 @@ app.get("/tacos", (req, res) => {
 });
 
 app.post("/tacos", (req, res) => {
-  console.log(req.body);
-  res.send("POST /tacos response");
+  const { meat, qty } = req.body;
+  // console.log(req.body);
+  // res.send("POST /tacos response");
+  res.send(`Ok, here are your ${qty} ${meat} tacos`);
 });
 
 app.listen(3000, () => {
