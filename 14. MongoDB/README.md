@@ -46,6 +46,8 @@
 ## MongoDB
 <a href="https://www.mongodb.com/cloud/atlas/lp/try4?utm_source=google&utm_campaign=gs_apac_south_korea_search_core_brand_atlas_desktop&utm_term=mongodb&utm_medium=cpc_paid_search&utm_ad=e&utm_ad_campaign_id=12212624365&adgroup=115749706703&gclid=CjwKCAjwpKyYBhB7EiwAU2Hn2bKvKMQg9FgZNyYKc1yCtfVnqJmVTRiq3Vu6Yfjq321vgqpmQpdrvxoCVDoQAvD_BwE">MongoDB</a>
 
+`MongoDB`는 C++로 작성된 오픈소스 문서 지향적(Document-Oriented) 크로스 플랫폼 데이터베이스입니다. `NoSQL`은 `Not Only SQL`이라는 의미로서, 기존 `RDBMS`의 한계를 극복하기 위해 만들어진 새로운 형태의 저장소입니다. `RDBMS`와는 다르게 고정된 스키마와 조인 기능이 존재하지 않는 특징을 가지고 있습니다.
+
 `NoSQL` 형식으로 동작하는 여러 종류의 데이터베이스 중 `MongoDB`를 선택한 이유는 다음과 같습니다.
 1. `MongoDB`는 `Node.js and Express.js` 프레임워크에 사용하기 적합합니다. 
 2. `MongoDB`는 빠르게 학습해 어떤 결과물을 만들어 내기에 적합합니다.
