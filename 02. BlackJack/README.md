@@ -181,8 +181,10 @@ function show_some(player, dealer) {
   console.log(" <card hidden>");
   console.log("", dealer.cards[1]);
   console.log("\nPlayer's Hand");
-  console.log("", player.cards[0]);
-  console.log("", player.cards[1]);
+
+  player.cards.forEach((card) => {
+    console.log("", card);
+  });
 }
 
 function show_all(player, dealer) {
