@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Movie App</title>
+    <%- include("head") %>
+  </head>
+
+  <body>
+    <%- include("navbar") %>
+    <div class="movie-container">
+      <div class="movie-label">
+        <h1>Now Playing</h1>
+      </div>
+      <div class="movie-row">
+        <% parsedData.forEach((movie) => { %>
+        <div class="movie-card">
+          <a href="/movie/<%= movie.id %>">
+            <img
+              src="<%= imageBaseUrl + movie.poster_path %>"
+              alt="<%= `${movie.title} movie poster` %>"
+            />
+          </a>
+        </div>
+        <% }) %>
+      </div>
+    </div>
+  </body>
+</html>
